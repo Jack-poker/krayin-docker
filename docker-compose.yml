@@ -23,7 +23,7 @@ services:
       MYSQL_ROOT_HOST: '%'
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - '3306:3306'
+      - '3304:3306'
     volumes:
       - './.configs/mysql-data:/var/lib/mysql/'
   krayin-redis:
