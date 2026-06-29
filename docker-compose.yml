@@ -41,7 +41,7 @@ services:
       PMA_PASSWORD: root
       UPLOAD_LIMIT: 512M
     ports:
-      - '8080:80'
+      - '8188:80'
   krayin-mailhog:
     image: mailhog/mailhog
     logging:
