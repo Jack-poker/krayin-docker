@@ -5,7 +5,8 @@ services:
       args:
         container_project_path: /var/www/html/
         uid: 1519
-        user: $USER
+        # Use a fixed username instead of $USER to avoid issues
+        user: krayin
       context: .
       dockerfile: ./Dockerfile
     image: krayin-php-apache
@@ -13,6 +14,8 @@ services:
       - '80:80'
     volumes:
       - './workspace/:/var/www/html/'
+    # Add this to ensure proper permissions
+    user: "1519:1519"
   krayin-mysql:
     image: 'mysql:8.0'
     command: '--default-authentication-plugin=mysql_native_password'
