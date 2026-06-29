@@ -11,7 +11,7 @@ services:
       dockerfile: ./Dockerfile
     image: krayin-php-apache
     ports:
-      - '80:80'
+      - '8006:80'
     volumes:
       - './workspace/:/var/www/html/'
     # Add this to ensure proper permissions
