@@ -5,36 +5,47 @@ services:
       args:
         container_project_path: /var/www/html/
         uid: 1519
-        # Use a fixed username instead of $USER to avoid issues
         user: krayin
       context: .
       dockerfile: ./Dockerfile
     image: krayin-php-apache
+    container_name: krayin-php-apache
     ports:
       - '8006:80'
     volumes:
       - './workspace/:/var/www/html/'
-    # Add this to ensure proper permissions
-    user: "1519:1519"
+    restart: unless-stopped
+    depends_on:
+      - krayin-mysql
+      - krayin-redis
+
   krayin-mysql:
     image: 'mysql:8.0'
+    container_name: krayin-mysql
     command: '--default-authentication-plugin=mysql_native_password'
     environment:
       MYSQL_ROOT_HOST: '%'
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: krayin
     ports:
       - '3304:3306'
     volumes:
       - './.configs/mysql-data:/var/lib/mysql/'
+    restart: unless-stopped
+
   krayin-redis:
     image: 'redis:6.2-alpine'
+    container_name: krayin-redis
     ports:
       - '6379:6379'
     command: 'redis-server --save 20 1 --loglevel warning'
     volumes:
       - './.configs/redis-data:/data'
+    restart: unless-stopped
+
   krayin-phpmyadmin:
     image: 'phpmyadmin:latest'
+    container_name: krayin-phpmyadmin
     environment:
       PMA_HOST: krayin-mysql
       PMA_USER: root
@@ -42,10 +53,14 @@ services:
       UPLOAD_LIMIT: 512M
     ports:
       - '8188:80'
+    restart: unless-stopped
+
   krayin-mailhog:
     image: mailhog/mailhog
+    container_name: krayin-mailhog
     logging:
       driver: none
     ports:
       - '1025:1025'
       - '8025:8025'
+    restart: unless-stopped
